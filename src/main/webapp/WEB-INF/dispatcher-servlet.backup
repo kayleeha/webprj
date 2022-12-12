@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/mvc
+        https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<bean id="/index"
+		class="com.newlecture.web.controller.IndexController" />  <!-- url mapping -->
+	<bean id="/notice/list"
+		class="com.newlecture.web.controller.notice.ListController">
+		<property name="noticeService" ref="noticeService" />
+		<!-- 원래는 여기에서의 name은 ListController가 가지고 있는 setter -->
+		<!-- noticeService는 interface명-->
+	</bean>
+	<bean id="/notice/detail"
+		class="com.newlecture.web.controller.notice.DetailController" />
+
+	<bean
+		class="org.springframework.web.servlet.view.UrlBasedViewResolver">
+		<property name="viewClass"
+			value="org.springframework.web.servlet.view.tiles3.TilesView" />
+		<property name="order" value="1" /> <!-- 우선순위를 InternalResourceViewResolver보다 높게 설정 -->
+	</bean>
+
+	<bean
+		class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions" value="/WEB-INF/tiles.xml" />
+	</bean>
+
+
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/view/"></property>
+		<property name="suffix" value=".jsp"></property>
+		<property name="order" value="2" />
+	</bean>
+	<mvc:resources location="/static/" mapping="/**"></mvc:resources>
+
+
+	<bean id="noticeService" class="com.newlecture.web.service.jdbc.JDBCNoticeService" >
+	<!-- 여기에서의 id는 id="/notice/list"의 ref를 뜻함-->
+		<property name="dataSource" ref="dataSource"/> <!-- DriverManagerDataSource class의 name명이 ref와 연결됨 -->
+	</bean>
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" /> <!-- DriverManagerDataSource가 가지고 있는 setter name으로 name명 정해야함 -->
+		<property name="url" value="jdbc:oracle:thin:@localhost:1521/xe" />
+		<property name="username" value="c##dodo" />
+		<property name="password" value="tiger" />
+	</bean>
+</beans>
