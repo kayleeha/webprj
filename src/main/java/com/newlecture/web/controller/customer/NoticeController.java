@@ -3,9 +3,13 @@ package com.newlecture.web.controller.customer;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.newlecture.web.entity.Notice;
 import com.newlecture.web.service.NoticeService;
@@ -18,9 +22,13 @@ public class NoticeController {
 	private NoticeService noticeService; //interface 기반..
 	
 	@RequestMapping("list")
-	public String  list() throws ClassNotFoundException, SQLException {
+	public String  list(@RequestParam(value = "p", defaultValue = "1") Integer page) throws ClassNotFoundException, SQLException {
+		//String p =  request.getParameter("p");  //RequestParam을 사용하면 간단한 url 주소를 만들 수 있다. parameter와 실제 받는 변수명이 다른 경우에 사용
+		//defaultValue를 사용해 parameter 값이 null일 때 기본값을 설정할 수 있다.
 		
-		List<Notice> list = noticeService.getList(1, "TITLE", "");
+		System.out.println("page:" + page);
+		
+		//List<Notice> list = noticeService.getList(1, "TITLE", "");
 		
 		return "notice.list";
 	}
